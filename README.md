@@ -1,4 +1,4 @@
-AWS Route53 Records mapping Module  Terraform module
+AWS Route53 Records mapping Terraform module
 =====================================
 
 [![Opstree Solutions][opstree_avatar]][opstree_homepage]
@@ -8,7 +8,7 @@ AWS Route53 Records mapping Module  Terraform module
   [opstree_homepage]: https://opstree.github.io/
   [opstree_avatar]: https://img.cloudposse.com/150x150/https://github.com/opstree.png
 
-Terraform module which creates Route53 Records mapping module on AWS.
+Terraform module for Route53 Records mapping on AWS.
 
 These types of resources are supported:
 
