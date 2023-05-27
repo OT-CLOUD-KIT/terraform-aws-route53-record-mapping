@@ -9,7 +9,7 @@ variable "route53_zone" {
       vpc_region = string
     })))
   }))
-  default = null
+  default     = null
   description = "Route53 hosted zones detail"
 }
 
@@ -22,7 +22,6 @@ variable "route53_record" {
     records          = optional(list(string))
     set_identifier   = optional(string)
     health_check_id  = optional(string)
-    multivalue_answer_routing_policy = optional(bool)
     allow_overwrite  = optional(bool)
     alias = optional(list(object({
       name                   = string
@@ -48,7 +47,7 @@ variable "route53_record" {
       weight = number
     })))
   }))
-  default = null
+  default     = null
   description = "Route53 records for a specific hosted zone"
 
 }
