@@ -5,7 +5,6 @@ resource "aws_route53_zone" "www" {
   comment           = each.value.comment
   force_destroy     = each.value.force_destroy
   delegation_set_id = each.value.private_zone == null ? each.value.delegation_set_id : null
-
   dynamic "vpc" {
     for_each = each.value.private_zone != null ? each.value.private_zone : {}
     content {
@@ -18,7 +17,7 @@ resource "aws_route53_zone" "www" {
 resource "aws_route53_record" "www" {
   for_each        = var.route53_record != null ? var.route53_record : {}
   zone_id         = each.value.zone_id == null ? aws_route53_zone.www[each.value.hosted_zone_name].zone_id : each.value.zone_id
-  name            = each.key
+  name            = each.value.record_name != null ? each.value.record_name : each.key
   type            = each.value.type
   ttl             = each.value.ttl
   records         = each.value.records

@@ -15,14 +15,16 @@ variable "route53_zone" {
 
 variable "route53_record" {
   type = map(object({
-    type             = string
-    ttl              = number
-    hosted_zone_name = optional(string)
-    zone_id          = optional(string)
-    records          = optional(list(string))
-    set_identifier   = optional(string)
-    health_check_id  = optional(string)
-    allow_overwrite  = optional(bool)
+    record_name                      = optional(string)
+    type                             = string
+    ttl                              = number
+    hosted_zone_name                 = optional(string)
+    zone_id                          = optional(string)
+    records                          = optional(list(string))
+    set_identifier                   = optional(string)
+    health_check_id                  = optional(string)
+    multivalue_answer_routing_policy = optional(bool)
+    allow_overwrite                  = optional(bool)
     alias = optional(list(object({
       name                   = string
       zone_id                = string
