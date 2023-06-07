@@ -16,7 +16,7 @@ This module helps users in setup:
 AWS
 
 ## Note
-- This module has to resources route53_zone and route53_record users can use either together or individual resources.
+- This module has two resources route53_zone and route53_record users can use either together or individual resources.
 - If user has more than one record with same name than you can use record_name var: under route53_record.
 
 ## Input
