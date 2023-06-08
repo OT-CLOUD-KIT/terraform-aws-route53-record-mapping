@@ -1,68 +1,103 @@
-AWS Route53 Records mapping Module  Terraform module
-=====================================
-
-[![Opstree Solutions][opstree_avatar]][opstree_homepage]
-
-[Opstree Solutions][opstree_homepage] 
+# Route53 
+[![Opstree Solutions][opstree_avatar]][opstree_homepage]<br/>[Opstree Solutions][opstree_homepage] 
 
   [opstree_homepage]: https://opstree.github.io/
   [opstree_avatar]: https://img.cloudposse.com/150x150/https://github.com/opstree.png
 
-Terraform module which creates Route53 Records mapping module on AWS.
+This module helps users in setup:
+- Hosted zones
+- Records
 
-These types of resources are supported:
+## Prerequisites
+- AWS access with permission for Route53
+- Terraform
+- AWS CLI
+## Providers
+AWS
 
-* [route53_record](https://www.terraform.io/docs/providers/aws/r/route53_record.html)
+## Note
+- This module has two resources route53_zone and route53_record users can use either together or individual resources.
+- If user has more than one record with same name than you can use record_name var: under route53_record.
 
-Terraform versions
-------------------
+## Input
+| Name | Description | Type | Default | Required |
+|-------|----------|------|-----|-----|
+| route53_zone | User input for hosted zone  | map(object) | null | no |
+| route53_record | About record inside hosted zone | map(object) | null | no |
 
-Terraform 0.12.
+## Output
+| Name | Description |
+|------|-------------|
+| route53_hosted_zones | Route53 hosted zones |
+| route53_records | Route53 hosted zone's records |
 
-Usage
-------
-
+## Usage
 ```hcl
-provider "aws" {
-  region = "ap-south-1"
+module "route53_zone" {
+  source         = "./modules"
+  route53_zone   = var.route53_zone
+  route53_record = var.route53_record
 }
 
-module "records" {
-  source                  = "../route53_records_mapping"
-  dns_names               = ["helloworld1", "hellowold2"]
-  rout53_record_type      = "A"
-  zone_id                 = ""
-  ttl                     = "60"
-  records                 = ["10.0.0.1", "10.0.0.2"]
+variable "route53_zone" {
+  type = map(object({
+    comment           = optional(string)
+    delegation_set_id = optional(string)
+    tags              = optional(map(string))
+    force_destroy     = optional(bool, false)
+    private_zone = optional(map(object({
+      vpc_id     = string
+      vpc_region = string
+    })))
+  }))
+  default = {
+    "example.com" = {
+      comment = "example private hosted zone"
+      tags = {
+        ManagedBy = "Terraform"
+        Name      = "Example"
+        Type      = "Private"
+      }
+      private_zone = {
+        "pw-production-vpc" = {
+          vpc_id     = "vpc-1234567890"
+          vpc_region = "ap-south-1"
+        }
+      }
+    }
+    "xyz.com" = {
+      comment = "xyz public hosted zone"
+      tags = {
+        ManagedBy = "Terraform"
+        Type      = "Public"
+      }
+    }
+  }
+}
+
+variable "route53_record" {
+  type = map(object({
+    hosted_zone_name = string
+    type             = string
+    ttl              = number
+    records          = optional(list(string))
+  }))
+  default = {
+    "example-record-name-1" = {
+      hosted_zone_name = "example.com"
+      type             = "CNAME"
+      ttl              = 30
+      records          = ["another-domain-aws-service"]
+    }
+    "example-record-name-2" = {
+      hosted_zone_name = "xyz.com"
+      type             = "A"
+      ttl              = 30
+      records          = ["x.x.x.x"]
+    }
+  }
 }
 
 ```
-
-Tags
-----
-* Tags are assigned to resources with name variable as prefix.
-* Additial tags can be assigned by tags variables as defined above.
-
-Inputs
-------
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| dns_name | Define dns name  | `list(string)` | `"false"` | yes |
-| route53_record_type | Define record type   | `string` | `"CNAME"` | no |
-| zone_id | You can define the zone_id | `string` | `"false"` | yes |
-| ttl | define time in seconds to records entry in DNS severe | `string` | `"false"` | yes |
-| records | Define the records to map  | `list(string)` | `"false"` | yes |
-
-
-## Related Projects
-
-Check out these related projects.
-
-- [security_group](https://github.com/OT-CLOUD-KIT/terraform-aws-network-skeleton) - Terraform module for creating dynamic Security 
-
-### Contributors
-
-[![Devesh Sharma][devesh_avataar]][devesh_homepage]<br/>[Devesh Sharma][devesh_homepage] 
-
-  [devesh_homepage]: https://github.com/deveshs23
-  [devesh_avataar]: https://img.cloudposse.com/75x75/https://github.com/deveshs23.png
+## Contributor
+[Ashutosh Yadav](https://github.com/ashutoshyadav66)
