@@ -6,6 +6,9 @@ A Terraform module to manage **Route 53 Hosted Zones** (public and private) and 
 
 ## Architecture
 
+
+![Screenshot from 2025-07-03 09-14-07](https://github.com/user-attachments/assets/978f9883-1093-4bf6-bff2-5c76093f8c4c)
+
 > **Note:**  
 > This module supports creation of public and private hosted zones, with optional VPC attachment for private zones and dynamic record creation.
 
@@ -24,7 +27,7 @@ A Terraform module to manage **Route 53 Hosted Zones** (public and private) and 
 ## Usage
 ```hcl
 module "route53_zone" {
-  source         = "../"
+  source         = "OT-CLOUD-KIT/terraform-aws-route53-record-mapping"
   route53_zone   = var.route53_zone
   route53_record = var.route53_record
 }
